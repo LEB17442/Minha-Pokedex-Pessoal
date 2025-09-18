@@ -1,0 +1,35 @@
+<div class="search-container">
+    <h1 class="search-title">Escolha seu Pokemon!</h1>
+    <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <input class="search-input" 
+        type="text" 
+        formControlName="name"/>
+        <button class="search-button" type="submit">
+            <img class="search-image" src="/images/pokebola.png" alt="Pokebola">
+        </button>
+    </form>
+
+
+    @if (showCard) {
+        <app-card
+          [name]="pokemonName"
+          [sprite]="sprite"
+          [id]="id"
+          [ptypes]="ptypes">
+        </app-card>
+      }
+
+<div class="pokemon-grid">
+    @for(pokemon of pokemonList; track pokemon.id){
+        <app-card
+        class="cardContainer" 
+        [name] = "pokemon.name"
+        [sprite]="pokemon.sprites.front_default" 
+        [id]="pokemon.id"
+        [ptypes]="pokemon.types">  
+        </app-card> 
+    } @empty {
+        <p> nada a ser exibido </p>
+    }
+</div>
+</div>

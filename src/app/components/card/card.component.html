@@ -1,0 +1,13 @@
+<div class="cardContainer">
+    <div class="infoContainer">
+        <h2 class="pokemonId">{{ id }}</h2>
+        <h3 class="pokemonNome">{{ name }}</h3>
+
+        <div class="types">
+            @for (t of ptypes; track t) { 
+                <span [ngClass]="'type-' + t.type.name">{{ t.type.name }}</span> 
+              }
+        </div>
+    </div>
+    <img [src]="sprite" alt="sprite" class="pokemonImg">
+</div>
