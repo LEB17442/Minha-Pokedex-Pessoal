@@ -95,6 +95,42 @@
         </div>
       }
 
+<div class="damage-relations-container">
+  <h3>Relações de Dano</h3>
+  <div class="relation-group">
+    <h4>Fraquezas</h4>
+    <div class="types">
+      @for (type of weaknesses; track type.name) {
+        <span [style.background-color]="typeColors[type.name]">
+          {{ type.name }} <strong [ngClass]="getMultiplierClass(type.multiplier)">(x{{ type.multiplier }})</strong>
+        </span>
+      }
+      @if(weaknesses.length === 0) { <span class="none">Nenhuma</span> }
+    </div>
+  </div>
+  <div class="relation-group">
+    <h4>Resistências</h4>
+    <div class="types">
+      @for (type of resistances; track type.name) {
+        <span [style.background-color]="typeColors[type.name]">
+          {{ type.name }} <strong [ngClass]="getMultiplierClass(type.multiplier)">(x{{ type.multiplier }})</strong>
+        </span>
+      }
+      @if(resistances.length === 0) { <span class="none">Nenhuma</span> }
+    </div>
+  </div>
+  <div class="relation-group">
+    <h4>Imunidades</h4>
+    <div class="types">
+      @for (type of immunities; track type.name) {
+        <span class="tag-immunity" [style.background-color]="typeColors[type.name]">
+          {{ type.name }}
+        </span>
+      }
+      @if(immunities.length === 0) { <span class="none">Nenhuma</span> }
+    </div>
+  </div>
+</div>
     </div> } @else {
     <p class="loading-text">Carregando...</p>
   }

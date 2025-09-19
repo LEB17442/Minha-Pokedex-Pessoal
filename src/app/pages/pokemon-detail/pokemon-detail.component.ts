@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs';
 import { CommonModule, Location } from '@angular/common';
 import { PokemonService } from '../../services/pokemon.service';
 import { Pokemon, PokemonSpecies, PokemonVariety, FlavorTextEntry, EvolutionChainLink } from '../../interfaces/pokemon.interface';
+import { TypeRelations } from '../../interfaces/pokemon.interface';
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -12,6 +13,7 @@ import { Pokemon, PokemonSpecies, PokemonVariety, FlavorTextEntry, EvolutionChai
   templateUrl: './pokemon-detail.component.html',
   styleUrl: './pokemon-detail.component.css'
 })
+
 export class PokemonDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private pokemonService = inject(PokemonService);
@@ -24,6 +26,9 @@ export class PokemonDetailComponent implements OnInit {
   varieties: PokemonVariety[] = [];
   pokedexDescription = '';
   evolutionChain: { name: string, sprite: string }[] = [];
+  weaknesses: { name: string, multiplier: number }[] = [];
+  resistances: { name: string, multiplier: number }[] = [];
+  immunities: { name: string, multiplier: number }[] = [];
 
   backgroundGradient = '';
   iconUrl1: string | null = null;
@@ -51,6 +56,11 @@ export class PokemonDetailComponent implements OnInit {
       this.pokemon = details;
       this.isShiny = false;
       this.displaySprite = details.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default || details.sprites.front_default;
+      this.weaknesses = [];
+      this.resistances = [];
+      this.immunities = [];
+
+      this.calculateTypeRelations();
       
       this.buildBackgroundStyles();
       
@@ -68,6 +78,49 @@ export class PokemonDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  private calculateTypeRelations(): void {
+    if (!this.pokemon) return;
+
+    const typeRequests = this.pokemon.types.map(t => 
+      this.pokemonService.getTypeDetails(t.type.name)
+    );
+
+    forkJoin(typeRequests).subscribe(typeDetailsArray => {
+      const damageMap: { [key: string]: number } = {};
+
+      typeDetailsArray.forEach(typeDetails => {
+        const relations = typeDetails.damage_relations;
+        relations.double_damage_from.forEach(type => damageMap[type.name] = (damageMap[type.name] || 1) * 2);
+        relations.half_damage_from.forEach(type => damageMap[type.name] = (damageMap[type.name] || 1) * 0.5);
+        relations.no_damage_from.forEach(type => damageMap[type.name] = (damageMap[type.name] || 1) * 0);
+      });
+
+      // Listas para guardar os objetos
+      const weaknesses: { name: string, multiplier: number }[] = [];
+      const resistances: { name: string, multiplier: number }[] = [];
+      const immunities: { name: string, multiplier: number }[] = [];
+
+      for (const typeName in damageMap) {
+        const multiplier = damageMap[typeName];
+        if (multiplier > 1) weaknesses.push({ name: typeName, multiplier });
+        if (multiplier < 1 && multiplier > 0) resistances.push({ name: typeName, multiplier });
+        if (multiplier === 0) immunities.push({ name: typeName, multiplier });
+      }
+      
+      this.weaknesses = weaknesses;
+      this.resistances = resistances;
+      this.immunities = immunities;
+    });
+  }
+
+  getMultiplierClass(multiplier: number): string {
+    if (multiplier >= 4) return 'multiplier-x4';
+    if (multiplier > 1) return 'multiplier-x2';
+    if (multiplier < 1 && multiplier > 0.25) return 'multiplier-x05';
+    if (multiplier <= 0.25) return 'multiplier-x025';
+    return '';
   }
 
   private buildBackgroundStyles(): void {

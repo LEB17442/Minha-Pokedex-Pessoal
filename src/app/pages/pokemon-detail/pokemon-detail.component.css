@@ -305,3 +305,66 @@ h3 {
     background-position: 150px 150px, 225px 225px;
   }
 }
+
+/* --- Estilos para Relações de Dano --- */
+.damage-relations-container {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #ddd;
+}
+
+.relation-group {
+    margin-bottom: 15px;
+}
+
+.relation-group h4 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.relation-group .types {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Estilo para as tags de tipo nas Relações de Dano */
+.relation-group .types span {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.relation-group .types span.none {
+    background-color: transparent;
+    font-style: italic;
+    color: #888;
+    text-shadow: none;
+    border: none;
+}
+
+/* --- Estilos para os Multiplicadores de Dano --- */
+.multiplier-x4 {
+    color: #ffcdd2; /* Vermelho claro para contraste */
+    font-weight: 900;
+}
+
+.multiplier-x2 {
+    color: #ffecb3; /* Amarelo claro para contraste */
+}
+
+.multiplier-x05 {
+    color: #c8e6c9; /* Verde claro para contraste */
+}
+
+.multiplier-x025 {
+    color: #dcedc8; /* Verde mais claro ainda */
+    font-weight: 900;
+}

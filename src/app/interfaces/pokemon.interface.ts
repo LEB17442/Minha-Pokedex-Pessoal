@@ -57,6 +57,23 @@ export interface PokemonSpecies {
   flavor_text_entries: FlavorTextEntry[];
 }
 
+export interface NamedApiResource {
+  name: string;
+  url: string;
+}
+
+// NOVA: Define a estrutura completa das relações de dano de um tipo
+export interface TypeRelations {
+  double_damage_from: NamedApiResource[];
+  half_damage_from: NamedApiResource[];
+  no_damage_from: NamedApiResource[];
+}
+
+// NOVA: Define a estrutura da resposta da API para um tipo específico
+export interface PokemonTypeDetails {
+  damage_relations: TypeRelations;
+}
+
 // Define a estrutura principal do objeto Pokémon
 export interface Pokemon {
   id: number | string; 

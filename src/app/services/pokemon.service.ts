@@ -4,6 +4,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Pokemon, PokemonSpecies } from '../interfaces/pokemon.interface';
 import { EvolutionChainResponse } from '../interfaces/pokemon.interface'; 
+import { PokemonTypeDetails } from '../interfaces/pokemon.interface';
 
 // Interface para a resposta da lista principal da API
 interface PokeApiResponse {
@@ -91,8 +92,12 @@ public typeColors: { [key: string]: string } = {
     return this.http.get<Pokemon>(url);
   }
 
-getEvolutionChain(url: string): Observable<EvolutionChainResponse> {
+  getEvolutionChain(url: string): Observable<EvolutionChainResponse> {
     return this.http.get<EvolutionChainResponse>(url);
+  }
+
+  getTypeDetails(typeName: string): Observable<PokemonTypeDetails> {
+    return this.http.get<PokemonTypeDetails>(`https://pokeapi.co/api/v2/type/${typeName}`);
   }
 
 }
