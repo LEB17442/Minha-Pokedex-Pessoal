@@ -1,0 +1,307 @@
+.container {
+    position: relative; /* Necessário para o pseudo-elemento */
+    min-height: 100vh;
+    padding: 20px;
+    font-family: system-ui, sans-serif;
+    overflow: hidden; /* Garante que o padrão rotacionado não vaze */
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 150%;
+    transform: translateX(-15%) translateY(-15%) rotate(-25deg);
+    z-index: 0;
+
+    background-image: var(--icon1), var(--icon2);
+    
+    /* Espaçamento final: um "azulejo" de 150px para cada ícone */
+    background-size: 150px;
+    
+    /* Posição inicial para alternar os ícones */
+    background-position: 0px 0px, 75px 75px; 
+    
+    opacity: 0.1;
+
+    /* A CEREJA NO BOLO: A ANIMAÇÃO */
+    animation: scroll-background 40s linear infinite;
+}
+
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: white;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.detail-card {
+    position: relative; /* <-- ADICIONE ESTA LINHA */
+    z-index: 1;         /* <-- ADICIONE ESTA LINHA */
+
+    max-width: 600px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 20px 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    text-align: center;
+}
+
+.pokemon-image {
+    width: 200px;     /* Aumentado de 150px */
+    height: 200px;    /* Aumentado de 150px */
+    margin-top: -100px; /* Ajuste na margem para o novo tamanho */
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+}
+
+.name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.pokemon-name {
+    /* Fonte limpa e moderna, consistente com os títulos */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+
+    font-size: 3rem;
+    text-transform: capitalize;
+    margin: 0;
+    color: #333;
+}
+
+.pokemon-id {
+    color: #888;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.shiny-button, .cry-button {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.shiny-button:hover, .cry-button:hover {
+    transform: scale(1.2);
+}
+
+.types {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.types span {
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.physical-attributes,
+.pokedex-entry,
+.form-selector,
+.stats-container,
+.abilities-container,
+.evolution-container {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #ddd;
+}
+
+h3 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.physical-attributes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding-top: 15px; /* Ajuste para o primeiro separador */
+}
+
+.attribute-item h4 {
+    margin: 0 0 5px 0;
+    color: #888;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.attribute-item span {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.pokedex-entry p {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: center;
+}
+
+.form-selector label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #555;
+}
+
+.form-selector select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.stat-name {
+    width: 140px;
+    text-align: right;
+    margin-right: 10px;
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #555;
+}
+
+.stat-bar-background {
+    flex: 1;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+}
+
+.stat-bar-foreground {
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 5px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    animation: growStatBar 1s ease-out forwards;
+}
+
+@keyframes growStatBar {
+    from {
+        width: 0;
+    }
+    to {
+        /* A largura final será definida pelo style binding no HTML */
+    }
+}
+
+.abilities {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.abilities span {
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-transform: capitalize;
+    color: #333;
+}
+
+.evolution-chain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.evolution-step a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease;
+}
+
+.evolution-step a:hover {
+    transform: scale(1.1);
+}
+
+.evolution-step img {
+    width: 96px;
+    height: 96px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+}
+
+.evolution-step span {
+    margin-top: 5px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.evolution-arrow {
+    font-size: 2rem;
+    color: #888;
+}
+
+.loading-text {
+    text-align: center;
+    font-size: 2rem;
+    font-family: 'fonts';
+}
+
+/* ADICIONE ESTE BLOCO NO FINAL DO ARQUIVO */
+@keyframes scroll-background {
+  from {
+    /* Posição inicial que já definimos */
+    background-position: 0px 0px, 75px 75px;
+  }
+  to {
+    /* Posição final: movemos cada padrão pelo tamanho do seu "azulejo" (150px) para criar um loop perfeito */
+    background-position: 150px 150px, 225px 225px;
+  }
+}

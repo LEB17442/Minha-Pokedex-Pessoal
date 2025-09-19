@@ -1,0 +1,101 @@
+<div class="container" [style.background]="backgroundGradient"[style.--icon1]="iconUrl1"
+[style.--icon2]="iconUrl2 || iconUrl1">
+  <button (click)="goBack()" class="back-button">← Voltar para a Pokédex</button>
+  
+  @if (pokemon) {
+    <div class="detail-card">
+      
+      <img [src]="displaySprite" alt="{{ pokemon.name }}" class="pokemon-image">
+      
+      <div class="name-container">
+        <h1 class="pokemon-name">{{ pokemon.name }}</h1>
+        <div class="action-buttons">
+          <button class="shiny-button" (click)="toggleShiny()" title="Alternar para Shiny">✨</button>
+          <button class="cry-button" (click)="playPokemonCry()" title="Ouvir o som">🔊</button>
+        </div>
+      </div>
+
+      <h2 class="pokemon-id">#{{ pokemon.id }}</h2>
+
+      <div class="types">
+        @for(t of pokemon.types; track t.type.name) {
+          <span [style.background-color]="typeColors[t.type.name]">{{ t.type.name }}</span>
+        }
+      </div>
+
+      <div class="physical-attributes">
+        <div class="attribute-item">
+          <h4>Altura</h4>
+          <span>{{ pokemon.height / 10 }} m</span>
+        </div>
+        <div class="attribute-item">
+          <h4>Peso</h4>
+          <span>{{ pokemon.weight / 10 }} kg</span>
+        </div>
+      </div>
+
+      <div class="pokedex-entry">
+        <p>{{ pokedexDescription }}</p>
+      </div>
+
+      @if (varieties.length > 1) {
+        <div class="form-selector">
+          <label for="form-select">Formas:</label>
+          <select id="form-select" (change)="changeForm($event)">
+            @for (variety of varieties; track variety.pokemon.name) {
+              <option [value]="variety.pokemon.url" [selected]="variety.pokemon.name === pokemon.name">
+                {{ variety.pokemon.name }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="stats-container">
+        <h3>Stats</h3>
+        @for(s of pokemon.stats; track s.stat.name) {
+          <div class="stat-item">
+            <span class="stat-name">{{ s.stat.name }}</span>
+            <div class="stat-bar-background">
+              <div class="stat-bar-foreground" 
+                   [style.width.%]="(s.base_stat / 255) * 100"
+                   [style.background-color]="getStatColor(s.base_stat)">
+                <span>{{ s.base_stat }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="abilities-container">
+        <h3>Habilidades</h3>
+        <div class="abilities">
+          @for(a of pokemon.abilities; track a.ability.name) {
+            <span>{{ a.ability.name }}</span>
+          }
+        </div>
+      </div>
+
+      @if (evolutionChain.length > 0) {
+        <div class="evolution-container">
+          <h3>Evoluções</h3>
+          <div class="evolution-chain">
+            @for (evo of evolutionChain; track evo.name; let isLast = $last) {
+              <div class="evolution-step">
+                <a [routerLink]="['/pokemon', evo.name]">
+                  <img [src]="evo.sprite" alt="{{ evo.name }}">
+                  <span>{{ evo.name }}</span>
+                </a>
+              </div>
+              @if (!isLast) {
+                <span class="evolution-arrow">→</span>
+              }
+            }
+          </div>
+        </div>
+      }
+
+    </div> } @else {
+    <p class="loading-text">Carregando...</p>
+  }
+</div>

@@ -1,13 +1,20 @@
-<div class="cardContainer">
-    <div class="infoContainer">
-        <h2 class="pokemonId">{{ id }}</h2>
-        <h3 class="pokemonNome">{{ name }}</h3>
+<a [routerLink]="['/pokemon', name.toLowerCase()]" class="card-link">
+    <div class="cardContainer" [style.background]="getGradientStyle()">
+        
+        <div class="sprite-container">
+            <img [src]="sprite" alt="sprite" class="pokemonImg static">
+            <img [src]="animatedSprite" alt="animated sprite" class="pokemonImg animated">
+        </div>
 
-        <div class="types">
-            @for (t of ptypes; track t) { 
-                <span [ngClass]="'type-' + t.type.name">{{ t.type.name }}</span> 
-              }
+        <div class="infoContainer">
+            <h2 class="pokemonId">{{ id }}</h2>
+            <h3 class="pokemonNome">{{ name }}</h3>
+
+            <div class="types">
+                @for (t of ptypes; track t) { 
+                    <span [style.background-color]="typeColors[t.type.name]">{{ t.type.name }}</span>
+                }
+            </div>
         </div>
     </div>
-    <img [src]="sprite" alt="sprite" class="pokemonImg">
-</div>
+</a>

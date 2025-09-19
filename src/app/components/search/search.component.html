@@ -1,35 +1,74 @@
 <div class="search-container">
     <h1 class="search-title">Escolha seu Pokemon!</h1>
-    <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-        <input class="search-input" 
-        type="text" 
-        formControlName="name"/>
-        <button class="search-button" type="submit">
-            <img class="search-image" src="/images/pokebola.png" alt="Pokebola">
-        </button>
-    </form>
 
+    <div class="search-wrapper">
+        <button class="filter-toggle-button" (click)="toggleFilterOverlay()">
+            <img src="/images/pokebola.png" alt="Filtros">
+        </button>
+
+        <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+            <input class="search-input" type="text" formControlName="name"/>
+            <button class="search-button" type="submit">
+                <img class="search-image" src="/images/pokebola.png" alt="Pokebola">
+            </button>
+        </form>
+    </div>
 
     @if (showCard) {
         <app-card
           [name]="pokemonName"
           [sprite]="sprite"
+          [animatedSprite]="animatedSprite"
           [id]="id"
           [ptypes]="ptypes">
         </app-card>
-      }
-
-<div class="pokemon-grid">
-    @for(pokemon of pokemonList; track pokemon.id){
-        <app-card
-        class="cardContainer" 
-        [name] = "pokemon.name"
-        [sprite]="pokemon.sprites.front_default" 
-        [id]="pokemon.id"
-        [ptypes]="pokemon.types">  
-        </app-card> 
-    } @empty {
-        <p> nada a ser exibido </p>
     }
-</div>
+
+    @if (showFilterOverlay) {
+        <div class="filter-overlay">
+            <div class="filter-content">
+                <h2>Filtrar por Tipo (máx 2)</h2>
+                <div class="filter-buttons">
+                    @for(type of allTypes; track type.name) {
+                    <button 
+                        (click)="toggleTypeFilter(type.name)" 
+                        [class.active]="isTypeSelected(type.name)"
+                        [style.background-color]="typeColors[type.name]"> {{ type.name }}
+                    </button>
+                    }
+                </div>
+                <div class="filter-actions">
+                    <button class="action-button clear" (click)="clearFilters()">Limpar</button>
+                    <button class="action-button apply" (click)="applyFilters()">Aplicar</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isLoading) {
+      <div class="loading-spinner"></div>
+    }
+
+    <div class="pokemon-grid">
+        @for(pokemon of pokemonList; track pokemon.id){
+            <app-card
+                class="cardContainer" 
+                [name]="pokemon.name"
+                [sprite]="pokemon.sprites.front_default"
+                [animatedSprite]="pokemon.animatedSprite" 
+                [id]="pokemon.id"
+                [ptypes]="pokemon.types">  
+            </app-card> 
+        } @empty {
+            @if(!isLoading) {
+                <p>Nenhum Pokémon encontrado.</p>
+            }
+        }
+    </div>
+
+    <div class="load-more-container">
+      @if (!isLoading && pokemonList.length > 0 && selectedTypes.length === 0) {
+        <button class="load-more-button" (click)="loadMore()">Carregar Mais</button>
+      }
+    </div>
 </div>

@@ -1,76 +1,113 @@
+/* --- CARD CONTAINER --- */
 .cardContainer {
+    position: relative;
     display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-  width: 208px;
-  margin: 20px auto;
-  }
-
-  .infoContainer {
-    text-align: left;
-  }
-
-  .h1{
-    font-size: 24px;
-  font-weight: bold;
-  }
-    .h2{
-        font-size: 20px;
-        margin: 5px 0;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 220px;
+    height: 180px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: visible;
+    cursor: pointer;
+    z-index: 1;
+    margin: 0 auto; /* <-- VALOR ALTERADO */
 }
 
-.types{
+.cardContainer:hover {
+    transform: translateY(-10px) scale(1.05); 
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+    z-index: 10; /* <-- ADICIONE ESTA LINHA */
+}
+
+/* --- IMAGEM DO POKÉMON --- */
+/* Estilo base para o container dos sprites */
+.sprite-container {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.3s ease;
+}
+
+/* Estilo para ambas as imagens (estática e animada) */
+.pokemonImg {
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Para sobrepor as imagens */
+    left: 0;
+    filter: drop-shadow(0px 5px 8px rgba(0, 0, 0, 0.4));
+    transition: opacity 0.3s ease;
+}
+
+/* Por padrão, a animada fica escondida */
+.pokemonImg.animated {
+    opacity: 0;
+}
+
+/* Efeito de hover no container do card */
+.cardContainer:hover .sprite-container {
+    transform: translateX(-50%) scale(1.15);
+}
+
+/* Quando o card está em hover, mostramos a animada e escondemos a estática */
+.cardContainer:hover .pokemonImg.animated {
+    opacity: 1;
+}
+
+.cardContainer:hover .pokemonImg.static {
+    opacity: 0;
+}
+
+/* --- PAINEL DE INFORMAÇÕES --- */
+.infoContainer {
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    width: 100%;
+}
+
+.pokemonId {
+    font-size: 20px;
+    margin: 0;
+    opacity: 0.8; /* Um pouco mais sutil */
+}
+
+.pokemonNome {
+    font-size: 24px;
+    text-transform: capitalize;
+    margin-top: 5px;
+    margin-bottom: 10px; /* Mais espaço para os tipos */
+    font-weight: bold;
+}
+
+/* --- TAGS DE TIPO --- */
+.types {
     display: flex;
-    gap: 5px;
+    justify-content: center;
+    gap: 8px; /* Mais espaçamento */
 }
 
 .types span {
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 4px 12px;
+    border-radius: 20px; /* Mais arredondado */
     color: white;
     font-size: 14px;
     font-weight: bold;
-  }
-
-  .pokemonId {
-    font-size: 32px; /* Aumenta o tamanho do ID */
-    margin: 0;
-  }
-
-.pokemonNome{
-    font-size: 20px;
-    text-transform: capitalize;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.2); /* Fundo semitransparente */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
 }
 
-.pokemonImg{
-    width: 80px;
-  height: auto;
-  margin-left: 20px;
+.types span:hover {
+    transform: scale(1.1); /* Efeito de destaque no hover da tag */
 }
 
-  
-  /* Estilos individuais para cada tipo */
-  .type-fire { background-color: #F08030; }
-.type-water { background-color: #6890F0; }
-.type-grass { background-color: #78C850; }
-.type-electric { background-color: #F8D030; color: black; }
-.type-ice { background-color: #98D8D8; }
-.type-fighting { background-color: #C03028; }
-.type-poison { background-color: #A040A0; }
-.type-ground { background-color: #E0C068; color: black; }
-.type-flying { background-color: #A890F0; }
-.type-psychic { background-color: #F85888; }
-.type-bug { background-color: #A8B820; }
-.type-rock { background-color: #B8A038; color: black; }
-.type-ghost { background-color: #705898; }
-.type-dark { background-color: #705848; }
-.type-dragon { background-color: #7038F8; }
-.type-steel { background-color: #B8B8D0; color: black; }
-.type-fairy { background-color: #EE99AC; }
-.type-normal {background-color: gray;}
+.card-link {
+    text-decoration: none; /* Remove o sublinhado do link */
+}
