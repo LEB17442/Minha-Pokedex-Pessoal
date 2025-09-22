@@ -1,9 +1,10 @@
+/* Garanta que o container principal esteja preparado para as camadas */
 .container {
-    position: relative; /* Necessário para o pseudo-elemento */
+    position: relative;
+    overflow: hidden; /* Importante para conter as camadas rotacionadas */
     min-height: 100vh;
     padding: 20px;
     font-family: system-ui, sans-serif;
-    overflow: hidden; /* Garante que o padrão rotacionado não vaze */
 }
 
 .container::before {
@@ -11,23 +12,31 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 150%;
-    height: 150%;
-    transform: translateX(-15%) translateY(-15%) rotate(-25deg);
+    width: 100%;
+    height: 100%;
     z-index: 0;
+    opacity: 0.08;
+    transform: rotate(-25deg) scale(1.5); /* Efeito diagonal */
 
+    /* 1. Usamos apenas as duas imagens que precisamos */
     background-image: var(--icon1), var(--icon2);
-    
-    /* Espaçamento final: um "azulejo" de 150px para cada ícone */
-    background-size: 150px;
-    
-    /* Posição inicial para alternar os ícones */
-    background-position: 0px 0px, 75px 75px; 
-    
-    opacity: 0.1;
 
-    /* A CEREJA NO BOLO: A ANIMAÇÃO */
-    animation: scroll-background 40s linear infinite;
+    /* 2. AQUI você controla o tamanho do padrão. Cada ícone ocupará metade deste valor. */
+    background-size: 60px 150px;
+
+    /* 3. A animação que fará o movimento de rolagem */
+    animation: scroll-pattern 40s linear infinite;
+}
+
+@keyframes scroll-pattern {
+  from {
+    /* Posição inicial: Ícone 1 no canto superior esquerdo, Ícone 2 no inferior direito */
+    background-position: 0 0, 90px 70px;
+  }
+  to {
+    /* Move o padrão inteiro diagonalmente pelo tamanho do bloco (140px) para um loop perfeito */
+    background-position: -80px -80px, -40px -40px;
+  }
 }
 
 .back-button {
@@ -294,17 +303,6 @@ h3 {
     font-family: 'fonts';
 }
 
-/* ADICIONE ESTE BLOCO NO FINAL DO ARQUIVO */
-@keyframes scroll-background {
-  from {
-    /* Posição inicial que já definimos */
-    background-position: 0px 0px, 75px 75px;
-  }
-  to {
-    /* Posição final: movemos cada padrão pelo tamanho do seu "azulejo" (150px) para criar um loop perfeito */
-    background-position: 150px 150px, 225px 225px;
-  }
-}
 
 /* --- Estilos para Relações de Dano --- */
 .damage-relations-container {
