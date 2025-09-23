@@ -1,20 +1,31 @@
-<div class="search-container">
-    <h1 class="search-title">Escolha seu Pokemon!</h1>
+<div class="search-area">
+            <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+                <button type="button"
+                        class="icon-button filter-button"
+                        (click)="toggleFilterOverlay()"
+                        [ngClass]="{ 'filter-active': selectedTypes.length > 0 }">
+                    <img src="/images/filter-icon.svg" alt="Filtros">
+                </button>
+            <div class="input-wrapper">
+                <input class="search-input" type="text" formControlName="name" autocomplete="off"/>
+                        @if (suggestions.length > 0) {
+                            <div class="suggestions-list">
+                                @for (pokemon of suggestions; track pokemon.id) {
+                                    <div class="suggestion-item" (click)="selectSuggestion(pokemon.name)">
+                                        <img [src]="pokemon.sprites.front_default" alt="{{ pokemon.name }}">
+                                        <span>{{ pokemon.name }}</span>
+                                    </div>
+                                 }
+                            </div>
+                        }
+                    </div>
 
-    <div class="search-wrapper">
-        <button class="filter-toggle-button" (click)="toggleFilterOverlay()">
-            <img src="/images/pokebola.png" alt="Filtros">
-        </button>
+                <button type="submit" class="icon-button">
+                    <img src="/images/icons8-search.svg" alt="Buscar">
+                </button>
+            </form>
 
-        <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-            <input class="search-input" type="text" formControlName="name"/>
-            <button class="search-button" type="submit">
-                <img class="search-image" src="/images/pokebola.png" alt="Pokebola">
-            </button>
-        </form>
-    </div>
-
-    @if (showCard) {
+    </div> @if (showCard) {
         <app-card
           [name]="pokemonName"
           [sprite]="sprite"
@@ -30,11 +41,12 @@
                 <h2>Filtrar por Tipo (máx 2)</h2>
                 <div class="filter-buttons">
                     @for(type of allTypes; track type.name) {
-                    <button 
-                        (click)="toggleTypeFilter(type.name)" 
-                        [class.active]="isTypeSelected(type.name)"
-                        [style.background-color]="typeColors[type.name]"> {{ type.name }}
-                    </button>
+                        <button 
+                            (click)="toggleTypeFilter(type.name)" 
+                            [class.active]="isTypeSelected(type.name)"
+                            [style.background-color]="typeColors[type.name]">
+                            {{ type.name }}
+                        </button>
                     }
                 </div>
                 <div class="filter-actions">
@@ -68,7 +80,11 @@
 
     <div class="load-more-container">
       @if (!isLoading && pokemonList.length > 0 && selectedTypes.length === 0) {
-        <button class="load-more-button" (click)="loadMore()">Carregar Mais</button>
-      }
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalPokemon"
+        [itemsPerPage]="limit"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
+    }
     </div>
-</div>

@@ -4,6 +4,13 @@
    License: none (public domain)
 */
 
+body {
+    /* Fundo escuro com uma textura sutil de "ruído" */
+    background-color: #1a1a1a;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' width='80' height='40'%3E%3Cpath fill='%23333333' fill-opacity='0.2' d='M0 40a40 40 0 0 1 40-40V0h40v40H0zM0 0a40 40 0 0 0 40 40V0h40v40H0z'%3E%3C/path%3E%3C/svg%3E");
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+}
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -57,23 +64,93 @@ table {
 	font-style:normal;
 }
 
-/* Works on Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #ff0000 #000000;
+
+/* --- TEMA ESCURO (ATUAL) --- */
+body.theme-dark {
+    background-color: #1a1a1a;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' width='80' height='40'%3E%3Cpath fill='%23333333' fill-opacity='0.2' d='M0 40a40 40 0 0 1 40-40V0h40v40H0zM0 0a40 40 0 0 0 40 40V0h40v40H0z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-/* Works on Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 12px;
+/* --- TEMA CLARO (REWORK) --- */
+body.theme-light {
+    background-color: #f7f7f7; /* Fundo off-white, super limpo */
+    position: relative; /* Necessário para a marca d'água */
+    overflow-x: hidden; /* Evita que a pokébola cause scroll horizontal */
 }
 
-*::-webkit-scrollbar-track {
-  background: #000000;
+/* Marca d'água da Poké Bola */
+body.theme-light::after {
+    content: '';
+    position: fixed;
+    width: 60vw; /* Ocupa 60% da largura da tela */
+    height: 60vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url('/images/pokebola.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.05; /* Super sutil */
+    z-index: -1;
+    animation: rotate-watermark 60s linear infinite;
 }
 
-*::-webkit-scrollbar-thumb {
-  background-color: #ff0000;
+@keyframes rotate-watermark {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+body.theme-light .header-title {
+    color: #333;
+    text-shadow: none;
+}
+
+body.theme-light .search-area {
+    background: #ffffff;
+    border-color: #eee;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .search-form {
+    background: #f0f0f0;
+    border-color: #ddd;
+}
+
+body.theme-light .search-input {
+    background: white;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.theme-light .icon-button {
+    background-color: #eee;
+    border-color: #ccc;
+}
+
+body.theme-light .icon-button:hover {
+    background-color: #ddd;
+    border-color: #bbb;
+}
+
+body.theme-light .icon-button img {
+    filter: none; /* Remove o filtro branco do ícone */
+}
+
+/* --- ESTILOS DA BARRA DE ROLAGEM --- */
+/* Estilo para o Tema Escuro */
+body.theme-dark::-webkit-scrollbar { width: 12px; }
+body.theme-dark::-webkit-scrollbar-track { background: #1a1a1a; }
+body.theme-dark::-webkit-scrollbar-thumb {
+  background-color: #d82a2a;
   border-radius: 20px;
-  border: 3px solid #000000;
+  border: 3px solid #1a1a1a;
+}
+
+/* Estilo para o Tema Claro */
+body.theme-light::-webkit-scrollbar { width: 12px; }
+body.theme-light::-webkit-scrollbar-track { background: #e9e9e9; }
+body.theme-light::-webkit-scrollbar-thumb {
+  background-color: #d82a2a; /* Vermelho como cor de destaque */
+  border-radius: 20px;
+  border: 3px solid #e9e9e9;
 }

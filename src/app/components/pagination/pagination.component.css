@@ -1,0 +1,5 @@
+.pagination-container { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 20px 0; }
+.pagination-container button { background-color: #f1f1f1; border: 1px solid #ddd; padding: 8px 12px; cursor: pointer; transition: background-color 0.2s; }
+.pagination-container button:hover:not([disabled]) { background-color: #ddd; }
+.pagination-container button.active { background-color: #ff0000; color: white; border-color: #ff0000; }
+.pagination-container button:disabled { cursor: not-allowed; opacity: 0.5; }

@@ -46,6 +46,10 @@ export class PokemonDetailComponent implements OnInit {
     });
   }
 
+  goBack(): void {
+    this.location.back();
+  }
+
   loadPokemonDetails(nameOrUrl: string): void {
     const isUrl = nameOrUrl.includes('https://');
     const pokemonObservable = isUrl 
@@ -142,10 +146,6 @@ export class PokemonDetailComponent implements OnInit {
       this.iconUrl2 = null;
       this.backgroundGradient = `linear-gradient(135deg, ${color1} 0%, #ffffff 100%)`;
     }
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 
   private processPokedexDescription(entries: FlavorTextEntry[]): void {

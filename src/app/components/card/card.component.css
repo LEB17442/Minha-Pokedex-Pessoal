@@ -1,4 +1,5 @@
 /* --- CARD CONTAINER --- */
+/* --- CARD CONTAINER (Estilos Comuns) --- */
 .cardContainer {
     position: relative;
     display: flex;
@@ -8,12 +9,42 @@
     height: 180px;
     padding: 15px;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
     cursor: pointer;
     z-index: 1;
-    margin: 0 auto; /* <-- VALOR ALTERADO */
+    margin: 0 auto;
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+/* --- ESTILOS DO TEMA ESCURO --- */
+.cardContainer.theme-dark {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.cardContainer.theme-dark .infoContainer {
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+.cardContainer.theme-dark .types span {
+    background-color: var(--type-color, #888);
+}
+
+/* --- ESTILOS DO TEMA CLARO --- */
+.cardContainer.theme-light {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.cardContainer.theme-light .infoContainer {
+    color: white; /* Mantido branco para melhor contraste com fundos coloridos */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+.cardContainer.theme-light .types span {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .cardContainer:hover {
@@ -22,92 +53,21 @@
     z-index: 10; /* <-- ADICIONE ESTA LINHA */
 }
 
-/* --- IMAGEM DO POKÉMON --- */
-/* Estilo base para o container dos sprites */
-.sprite-container {
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    top: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: transform 0.3s ease;
+/* --- Estilos Comuns para ambos os temas --- */
+.cardContainer:hover {
+    transform: translateY(-10px) scale(1.05);
 }
+.cardContainer.theme-dark:hover { box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6); }
+.cardContainer.theme-light:hover { box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); }
 
-/* Estilo para ambas as imagens (estática e animada) */
-.pokemonImg {
-    width: 100%;
-    height: 100%;
-    position: absolute; /* Para sobrepor as imagens */
-    left: 0;
-    filter: drop-shadow(0px 5px 8px rgba(0, 0, 0, 0.4));
-    transition: opacity 0.3s ease;
-}
-
-/* Por padrão, a animada fica escondida */
-.pokemonImg.animated {
-    opacity: 0;
-}
-
-/* Efeito de hover no container do card */
-.cardContainer:hover .sprite-container {
-    transform: translateX(-50%) scale(1.15);
-}
-
-/* Quando o card está em hover, mostramos a animada e escondemos a estática */
-.cardContainer:hover .pokemonImg.animated {
-    opacity: 1;
-}
-
-.cardContainer:hover .pokemonImg.static {
-    opacity: 0;
-}
-
-/* --- PAINEL DE INFORMAÇÕES --- */
-.infoContainer {
-    text-align: center;
-    color: white;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-    width: 100%;
-}
-
-.pokemonId {
-    font-size: 20px;
-    margin: 0;
-    opacity: 0.8; /* Um pouco mais sutil */
-}
-
-.pokemonNome {
-    font-size: 24px;
-    text-transform: capitalize;
-    margin-top: 5px;
-    margin-bottom: 10px; /* Mais espaço para os tipos */
-    font-weight: bold;
-}
-
-/* --- TAGS DE TIPO --- */
-.types {
-    display: flex;
-    justify-content: center;
-    gap: 8px; /* Mais espaçamento */
-}
-
-.types span {
-    padding: 4px 12px;
-    border-radius: 20px; /* Mais arredondado */
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.2); /* Fundo semitransparente */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
-}
-
-.types span:hover {
-    transform: scale(1.1); /* Efeito de destaque no hover da tag */
-}
-
-.card-link {
-    text-decoration: none; /* Remove o sublinhado do link */
-}
+.sprite-container { width: 120px; height: 120px; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); transition: transform 0.3s ease; }
+.pokemonImg { width: 100%; height: 100%; position: absolute; left: 0; filter: drop-shadow(0px 5px 8px rgba(0, 0, 0, 0.4)); transition: opacity 0.3s ease; }
+.pokemonImg.animated { opacity: 0; }
+.cardContainer:hover .sprite-container { transform: translateX(-50%) scale(1.15); }
+.cardContainer:hover .pokemonImg.animated { opacity: 1; }
+.cardContainer:hover .pokemonImg.static { opacity: 0; }
+.infoContainer { text-align: center; width: 100%; }
+.pokemonId { font-size: 20px; margin: 0; opacity: 0.8; }
+.pokemonNome { font-size: 24px; text-transform: capitalize; margin-top: 5px; margin-bottom: 10px; font-weight: bold; }
+.types { display: flex; justify-content: center; gap: 8px; }
+.types span { padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; }

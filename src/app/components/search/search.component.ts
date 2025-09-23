@@ -5,6 +5,9 @@ import { forkJoin, of } from 'rxjs';
 import { Pokemon, PokemonType } from '../../interfaces/pokemon.interface';
 import { PokemonService } from '../../services/pokemon.service';
 import { CardComponent } from "../card/card.component";
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { NotificationService } from '../../services/notification.service';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
   selector: 'app-search',
@@ -13,7 +16,8 @@ import { CardComponent } from "../card/card.component";
  imports: [
     CommonModule, 
     ReactiveFormsModule, 
-    CardComponent
+    CardComponent,
+    PaginationComponent
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
@@ -21,6 +25,7 @@ import { CardComponent } from "../card/card.component";
 export class SearchComponent implements OnInit {
   
   private pokemonService = inject(PokemonService);
+  private notificationService = inject(NotificationService);
   public typeColors = this.pokemonService.typeColors;
   
   showCard = false;
@@ -33,42 +38,81 @@ export class SearchComponent implements OnInit {
   isLoading = false;
   offset = 0;
   limit = 20;
+
+  totalPokemon = 0;
+  currentPage = 1;
   
   showFilterOverlay = false;
   allTypes: any[] = [];
   selectedTypes: string[] = [];
+  allPokemonNames: { name: string, url: string }[] = [];
+  suggestions: Pokemon[] = [];
 
   searchForm = new FormGroup({
     name: new FormControl('', Validators.required),
   });
 
   ngOnInit(): void {
-    this.loadPokemon();
+    this.loadPage(1);
     this.pokemonService.getTypes().subscribe(types => {
       this.allTypes = types.filter(t => t.name !== 'unknown' && t.name !== 'shadow');
     });
+
+    this.pokemonService.getAllPokemonNames().subscribe(list => {
+      this.allPokemonNames = list;
+    });
+
+    this.searchForm.get('name')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (value && value.length > 1) {
+          const filtered = this.allPokemonNames
+            .filter(p => p.name.toLowerCase().includes(value.toLowerCase()))
+            .slice(0, 5); // Pega os 5 melhores resultados
+          
+          // Se encontrou resultados, busca os detalhes completos deles
+          if (filtered.length > 0) {
+            const detailRequests = filtered.map(p => this.pokemonService.getPokemonByUrl(p.url));
+            return forkJoin(detailRequests);
+          }
+        }
+        return of([]); // Retorna um array vazio se não houver sugestões
+      })
+    ).subscribe(pokemonDetails => {
+      this.suggestions = pokemonDetails;
+    });
   }
 
-  loadPokemon(): void {
+  // Altere o método para receber o nome do Pokémon
+  selectSuggestion(name: string): void {
+    this.searchForm.get('name')?.setValue(name, { emitEvent: false }); // emitEvent: false para não disparar o valueChanges de novo
+    this.suggestions = [];
+    this.onSubmit();
+  }
+
+  loadPage(page: number): void {
+    this.currentPage = page;
     this.isLoading = true;
-    this.pokemonService.getPokemonList(this.offset, this.limit)
-      .subscribe((pokemonDetails: Pokemon[]) => {
-        const newPokemon = pokemonDetails.map(pokemon => ({
+    
+    const offset = (this.currentPage - 1) * this.limit;
+
+    this.pokemonService.getPokemonList(offset, this.limit)
+      .subscribe(response => {
+        this.totalPokemon = response.count;
+        // O serviço já nos retorna os detalhes, só precisamos formatar o que queremos
+        this.pokemonList = response.results.map(pokemon => ({
           ...pokemon,
           id: `#${String(pokemon.id).padStart(4, '0')}`,
           animatedSprite: pokemon.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default || pokemon.sprites.front_default
         }));
-        this.pokemonList = [...this.pokemonList, ...newPokemon];
-        console.log('Pokémon List Updated:', this.pokemonList);
-        this.pokemonList.sort((a, b) => (a.id as string).localeCompare(b.id as string));
         this.isLoading = false;
-        this.offset += this.limit;
+        window.scrollTo(0, 0);
       });
   }
-  
-  loadMore(): void {
-    if (this.selectedTypes.length > 0) return;
-    this.loadPokemon();
+
+  onPageChange(page: number): void {
+    this.loadPage(page);
   }
 
   toggleFilterOverlay(): void {
@@ -100,7 +144,7 @@ export class SearchComponent implements OnInit {
     this.toggleFilterOverlay();
 
     if (this.selectedTypes.length === 0) {
-      this.loadPokemon();
+      this.loadPage(1);
       return;
     }
 
@@ -155,7 +199,7 @@ export class SearchComponent implements OnInit {
         error: (error) => {
           console.error("Erro ao buscar o Pokémon:", error);
           this.isLoading = false;
-          alert('Pokémon não encontrado!');
+          this.notificationService.show('Pokémon não encontrado!');
         }
       });
   }

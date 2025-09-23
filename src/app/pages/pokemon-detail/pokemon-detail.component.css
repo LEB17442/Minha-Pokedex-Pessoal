@@ -25,17 +25,17 @@
     background-size: 60px 150px;
 
     /* 3. A animação que fará o movimento de rolagem */
-    animation: scroll-pattern 40s linear infinite;
+    animation: scroll-pattern 10s linear infinite;
 }
 
 @keyframes scroll-pattern {
   from {
     /* Posição inicial: Ícone 1 no canto superior esquerdo, Ícone 2 no inferior direito */
-    background-position: 0 0, 90px 70px;
+    background-position: 0 0, 120px 80px;
   }
   to {
     /* Move o padrão inteiro diagonalmente pelo tamanho do bloco (140px) para um loop perfeito */
-    background-position: -80px -80px, -40px -40px;
+    background-position: -70px -80px, -40px -10px;
   }
 }
 
@@ -49,6 +49,10 @@
     font-weight: bold;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative; /* Garante que o botão fique acima do padrão de fundo */
+    z-index: 1;
+    border: none; /* Adicionado para garantir que se pareça com um botão moderno */
+    cursor: pointer; /* Adicionado para indicar que é clicável */
 }
 
 .detail-card {

@@ -1,15 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Pokemon, PokemonSpecies } from '../interfaces/pokemon.interface';
 import { EvolutionChainResponse } from '../interfaces/pokemon.interface'; 
 import { PokemonTypeDetails } from '../interfaces/pokemon.interface';
+import { PokemonListResponse, PokeApiResponse } from '../interfaces/pokemon.interface'; // Importe as interfaces
 
-// Interface para a resposta da lista principal da API
-interface PokeApiResponse {
-  results: { url: string }[];
-}
 
 // NOVA Interface para a resposta da API de tipo
 interface PokeTypeApiResponse {
@@ -45,15 +42,22 @@ public typeColors: { [key: string]: string } = {
 
   private http = inject(HttpClient);
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon';
+  private allPokemonNames: { name: string, url: string }[] = [];
 
-  getPokemonList(offset: number, limit: number): Observable<Pokemon[]> {
+ getPokemonList(offset: number, limit: number): Observable<PokemonListResponse> {
     return this.http.get<PokeApiResponse>(`${this.apiUrl}?limit=${limit}&offset=${offset}`).pipe(
       switchMap(response => {
+        const count = response.count;
         if (!response.results || response.results.length === 0) {
-          return of([]);
+          return of({ count: count, results: [] }); // Retorna um objeto formatado
         }
         const detailRequests = response.results.map(result => this.http.get<Pokemon>(result.url));
-        return forkJoin(detailRequests);
+        
+        return forkJoin(detailRequests).pipe(
+          map(pokemonDetails => {
+            return { count: count, results: pokemonDetails }; // Retorna o objeto final
+          })
+        );
       })
     );
   }
@@ -100,4 +104,14 @@ public typeColors: { [key: string]: string } = {
     return this.http.get<PokemonTypeDetails>(`https://pokeapi.co/api/v2/type/${typeName}`);
   }
 
+  getAllPokemonNames(): Observable<{name: string, url: string }[]> {
+    if (this.allPokemonNames.length > 0) {
+      return of(this.allPokemonNames); // Retorna a lista do cache se já tivermos
+    }
+    // A API retorna até 2000 resultados com limit=-1
+    return this.http.get<any>('https://pokeapi.co/api/v2/pokemon?limit=2000').pipe(
+      map(response => response.results),
+      tap(results => this.allPokemonNames = results) // Salva a lista no cache
+    );
+  }
 }

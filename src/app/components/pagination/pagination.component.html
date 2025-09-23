@@ -1,0 +1,13 @@
+<div class="pagination-container">
+  <button (click)="goToPage(1)" [disabled]="currentPage === 1">Primeira</button>
+  <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+
+  @for(page of pages; track page) {
+    <button (click)="goToPage(page)" [class.active]="currentPage === page">
+      {{ page }}
+    </button>
+  }
+
+  <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Próxima</button>
+  <button (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages">Última</button>
+</div>

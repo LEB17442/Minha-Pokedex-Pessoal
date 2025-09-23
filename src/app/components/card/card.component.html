@@ -1,20 +1,26 @@
-<a [routerLink]="['/pokemon', name.toLowerCase()]" class="card-link">
-    <div class="cardContainer" [style.background]="getGradientStyle()">
-        
-        <div class="sprite-container">
-            <img [src]="sprite" alt="sprite" class="pokemonImg static">
-            <img [src]="animatedSprite" alt="animated sprite" class="pokemonImg animated">
-        </div>
+@if(currentTheme$ | async; as theme) {
+  <a [routerLink]="['/pokemon', name.toLowerCase()]" class="card-link">
+      <div 
+          class="cardContainer" 
+          [class.theme-dark]="theme === 'dark'"
+          [class.theme-light]="theme === 'light'"
+          [style.background]="getGradientStyle(theme)">
+          
+          <div class="sprite-container">
+              <img [src]="sprite" alt="sprite" class="pokemonImg static">
+              <img [src]="animatedSprite" alt="animated sprite" class="pokemonImg animated">
+          </div>
 
-        <div class="infoContainer">
-            <h2 class="pokemonId">{{ id }}</h2>
-            <h3 class="pokemonNome">{{ name }}</h3>
+          <div class="infoContainer">
+              <h2 class="pokemonId">{{ id }}</h2>
+              <h3 class="pokemonNome">{{ name }}</h3>
 
-            <div class="types">
-                @for (t of ptypes; track t) { 
-                    <span [style.background-color]="typeColors[t.type.name]">{{ t.type.name }}</span>
-                }
-            </div>
-        </div>
-    </div>
-</a>
+              <div class="types">
+                  @for (t of ptypes; track t.type.name) { 
+                      <span [style.--type-color]="typeColors[t.type.name]">{{ t.type.name }}</span> 
+                  }
+              </div>
+          </div>
+      </div>
+  </a>
+}

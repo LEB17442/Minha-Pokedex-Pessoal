@@ -74,6 +74,18 @@ export interface PokemonTypeDetails {
   damage_relations: TypeRelations;
 }
 
+// NOVA: Define a estrutura da resposta da lista de Pokémon do nosso serviço
+export interface PokemonListResponse {
+  count: number;
+  results: Pokemon[];
+}
+
+// Garante que esta interface exista
+export interface PokeApiResponse {
+  count: number;
+  results: { name: string, url: string }[];
+}
+
 // Define a estrutura principal do objeto Pokémon
 export interface Pokemon {
   id: number | string; 
